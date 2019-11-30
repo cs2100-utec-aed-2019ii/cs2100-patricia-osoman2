@@ -2,8 +2,10 @@
 #define TRIE_H
 #include "TrieNode.hpp"
 #include "PtrieNode.hpp"
+#include "Patricia.hpp"
 #include <string>
 #include <fstream>
+
 class Trie
 {
 public:
@@ -73,17 +75,56 @@ public:
 
 
 
-   // string corregir(string cadena){
-   //     return corregir(0,cadena,root,0);
-   // }
-   // string corregir(int indice,string cad,TrieNode* &nodo,int contador){
-   //     for(int i = 0;i<2;i++){
-   //         if(estaenelnodo(cad[indice+i],nodo)){
-//
-   //         }
-   //         else contador++;
-   //     }
-   // }
+    void patricia(){
+        string cad;
+        Patricia ptree;
+        for (auto i = root->children.begin(); i!=root->children.end(); ++i)
+        {
+            cad = cad+i->first;
+        }
+        patricia_helper(root,cad,ptree.root);
+    }
+    void patricia_helper(TrieNode *nodo,string cadena,TrieNodeP* &pnodo){
+        auto elem = nodo->children;
+        if (elem.size()==1)
+        {
+            if(nodo->is_node==true){        
+                if(elem.empty()==true){
+                    TrieNodeP* nodosolo = new TrieNodeP;
+                    TrieNodeP* nodosolohijo = new TrieNodeP;
+                    nodosolohijo->completo = true;
+                    nodosolo->children.insert({cadena,nodosolohijo});
+                }
+                else
+                {
+                    for (auto i = elem.begin() ; i != elem.end(); ++i)
+                    {
+                        return patricia_helper(i->second,cadena);
+                    }
+                    
+                }    
+            }
+        }
+          
+        
+        else{
+            for (auto i = elem.begin(); i != elem.end(); ++i)
+            {
+                auto hijo = i->second;
+                if(hijo->is_node==true){
+                    TrieNodeP* nuevo = new TrieNodeP;
+                    if (hijo->children.empty())
+                    {   TrieNodeP* hijo = new TrieNodeP;
+                        hijo->completo = true;
+                        nuevo->children.insert({cadena,hijo});
+                    }
+                    else{
+
+                    }
+                }
+            }
+        }
+    }
 
     bool estaenelnodo(char letra,TrieNode* &nodo ){
         if(nodo->children.find(letra)==nodo->children.end())return false;
