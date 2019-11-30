@@ -9,9 +9,9 @@ using namespace std;
 class TrieNodeP {
     public:
     map<string,TrieNodeP*> children;
-    string completo;
+    bool completo;
 
-    TrieNodeP():completo(""){}
+    TrieNodeP():completo(false){}
     ~TrieNodeP();
     TrieNodeP* get (string key){
         if(children.find(key)==children.end())
